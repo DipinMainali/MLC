@@ -3,17 +3,19 @@ import Google from "next-auth/providers/google";
 import Credentials from "next-auth/providers/credentials";
 import { PrismaAdapter } from "@auth/prisma-adapter";
 import { prisma } from "@/lib/db";
-import { env } from "@/lib/env";
 import bcrypt from "bcryptjs";
 import { getContentRoleFromData, normalizeContentRole } from "@/lib/roles";
 
+const authSecret =
+  process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "dev-secret";
+
 const providers: any[] = [];
 
-if (env.GOOGLE_CLIENT_ID && env.GOOGLE_CLIENT_SECRET) {
+if (process.env.GOOGLE_CLIENT_ID && process.env.GOOGLE_CLIENT_SECRET) {
   providers.push(
     Google({
-      clientId: env.GOOGLE_CLIENT_ID,
-      clientSecret: env.GOOGLE_CLIENT_SECRET,
+      clientId: process.env.GOOGLE_CLIENT_ID,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET,
     }),
   );
 }
@@ -98,5 +100,5 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       return session;
     },
   },
-  secret: env.AUTH_SECRET,
+  secret: authSecret,
 });

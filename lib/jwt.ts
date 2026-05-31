@@ -1,7 +1,8 @@
 import { SignJWT, jwtVerify } from "jose";
-import { env } from "@/lib/env";
 
-const secret = new TextEncoder().encode(env.AUTH_SECRET);
+const secret = new TextEncoder().encode(
+  process.env.AUTH_SECRET ?? process.env.NEXTAUTH_SECRET ?? "dev-secret",
+);
 
 export interface AccessTokenPayload {
   sub: string;
